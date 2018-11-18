@@ -5,7 +5,7 @@ from PIL import ImageGrab
 import numpy as np
 from collections import Counter
 
-MINIMAP_COORDS = [1626, 14, 1905, 293]
+MINIMAP_COORDS = [1626, 14, 1906, 294]
 # COMPASS_COORDS = [942, 3, 978, 19]
 HEALTH_COORDS = [771, 965, 808, 986]
 ARMOUR_COORDS = [771, 937, 808, 958]
@@ -15,11 +15,8 @@ MAP_FILE = "./map.png"
 MAP_GRAY = cv2.imread(MAP_FILE, 0)
 MAP_COLOR = cv2.imread(MAP_FILE, 1)
 
-def grab_screenshot(coords):
-    original_img = ImageGrab.grab(bbox=coords)
-    original_array = np.array(original_img, dtype="uint8")
-    grayscaled_img = cv2.cvtColor(original_array, cv2.COLOR_BGR2GRAY)
-    return grayscaled_img
+def crop_screenshot(screenshot, coords):
+    return screenshot[coords[1]:coords[3], coords[0]:coords[2]]
 
 def find_location(minimap):
     img = cv2.resize(minimap, TEST_SIZE)
@@ -34,7 +31,7 @@ def find_location(minimap):
     return (res_x, res_y)
 
 def print_coords(coords):
-    print("({}, {})".format(coords[0], coords[1]))
+    print("Location: ({}, {})".format(coords[0], coords[1]))
     return
 
 def draw_coords(coords):
@@ -90,12 +87,15 @@ def main():
     print("Map filepath:", MAP_FILE)
     print("Test size: ({}, {})".format(TEST_SIZE[0], TEST_SIZE[1]))
     while True:
-        coords = find_location(grab_screenshot(MINIMAP_COORDS))
+        screenshot = ImageGrab.grab()
+        screenshot = np.array(screenshot, dtype="uint8")
+        screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+        coords = find_location(crop_screenshot(screenshot, MINIMAP_COORDS))
         print_coords(coords)
         draw_coords(coords)
-        health = find_health(grab_screenshot(HEALTH_COORDS))
+        health = find_health(crop_screenshot(screenshot, HEALTH_COORDS))
         print_health(health)
-        armour = find_armour(grab_screenshot(ARMOUR_COORDS))
+        armour = find_armour(crop_screenshot(screenshot, ARMOUR_COORDS))
         print_armour(armour)
 
     return
