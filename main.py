@@ -72,11 +72,8 @@ def find_armour(armour_img):
     kernel = np.ones((1, 1), np.uint8)
     armour_img = cv2.threshold(armour_img, 180, 255,
                                cv2.THRESH_BINARY_INV)[1]
-    cv2.imshow("Armour", armour_img)
-    cv2.waitKey(1)
     armour_str = pytesseract.image_to_string(armour_img, lang="fortnite",
                                              config="outputbase digits")
-    print(armour_str)
     if armour_str.isdigit():
         return int(armour_str)
     else:
