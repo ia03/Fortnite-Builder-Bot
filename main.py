@@ -20,7 +20,7 @@ def find_location(minimap):
     img = cv2.resize(minimap, TEST_SIZE)
 
     template = MAP_GRAY.copy()
-    res = cv2.matchTemplate(img, template, cv2.TM_SQDIFF_NORMED)
+    res = cv2.matchTemplate(img, template, cv2.TM_SQDIFF)
 
     _, _, top_left, _ = cv2.minMaxLoc(res)
     res_x = int(top_left[0] + TEST_SIZE[0] / 2)
