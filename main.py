@@ -1,9 +1,7 @@
 import cv2
-import time
 import pytesseract
 from PIL import ImageGrab
 import numpy as np
-from collections import Counter
 
 MINIMAP_COORDS = [1626, 14, 1906, 294]
 # COMPASS_COORDS = [942, 3, 978, 19]
@@ -20,7 +18,6 @@ def crop_screenshot(screenshot, coords):
 
 def find_location(minimap):
     img = cv2.resize(minimap, TEST_SIZE)
-    votes = Counter()
 
     template = MAP_GRAY.copy()
     res = cv2.matchTemplate(img, template, cv2.TM_SQDIFF_NORMED)
